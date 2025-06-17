@@ -1,0 +1,80 @@
+<div class="card" style="border-radius: 15px">
+  <div class="card-body p-5">
+    <h2 class="text-uppercase text-center mb-5">Add Product Data</h2>
+
+    <form>
+      <div data-mdb-input-init class="form-outline mb-4">
+        <label class="form-label" for="form3Example1cg">Name:</label>
+        <input
+          type="text"
+          id="form3Example1cg"
+          class="form-control form-control-lg"
+          [(ngModel)]="productObj.name"
+          name="name"
+        />
+      </div>
+
+      <div data-mdb-input-init class="form-outline mb-4">
+        <label class="form-label" for="form3Example3cg">Price:</label>
+        <input
+          type="number"
+          id="form3Example3cg"
+          class="form-control form-control-lg"
+          [(ngModel)]="productObj.price"
+          name="price"
+          min="1"
+        />
+      </div>
+
+      <div data-mdb-input-init class="form-outline mb-4">
+        <label class="form-label" for="form3Example4cg">Description</label>
+        <input
+          type="text"
+          id="form3Example4cg"
+          class="form-control form-control-lg"
+          [(ngModel)]="productObj.description"
+          name="description"
+        />
+      </div>
+
+      <div data-mdb-input-init class="form-outline mb-4">
+        <label for="categoryName" class="form-label">Category</label>
+        <select
+          class="form-select"
+          id="categoryName"
+          name="categoryName"
+          required
+          [(ngModel)]="productObj.categoryId"
+        >
+          <option value="">-- Select Category --</option>
+          <option value="1">Electronics</option>
+          <option value="2">Home & Kitchen</option>
+          <option value="3">Clothing</option>
+          <option value="4">Beauty & Personal Care</option>
+          <option value="5">Digital Products</option>
+        </select>
+      </div>
+
+      <div data-mdb-input-init class="form-outline mb-4">
+        <label class="form-label" for="form3Example4cdg">Image</label>
+        <input
+          type="file"
+          id="form3Example4cdg"
+          class="form-control form-control-lg"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+      <div class="d-flex justify-content-center">
+        <button
+          type="button"
+          data-mdb-button-init
+          data-mdb-ripple-init
+          class="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
+          (click)="addProduct()"
+        >
+          Add Product
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

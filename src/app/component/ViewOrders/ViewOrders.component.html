@@ -1,0 +1,58 @@
+<section class="intro" style="height: 100vh; background-color: #f8f9fa">
+  <div class="container-fluid h-100 d-flex flex-column p-3">
+    <div class="card shadow-sm h-100 d-flex flex-column">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Managed Orders</h5>
+      </div>
+      <div class="card-body p-0 flex-grow-1 d-flex flex-column">
+        <div class="table-responsive" style="flex: 1 1 auto">
+          <table
+            class="table table-striped table-hover align-middle mb-0"
+            style="table-layout: fixed; width: 100%"
+          >
+            <thead class="table-dark">
+              <tr class="text-uppercase text-success">
+                <th scope="col" style="width: 40px">#</th>
+                <th scope="col" style="width: 120px">Order Number</th>
+                <th scope="col" style="width: 160px">Order Date</th>
+                <th scope="col" style="width: 160px">Customer Name</th>
+                <th scope="col" style="width: 200px">Customer Email</th>
+                <th scope="col" style="width: 140px">Customer Phone</th>
+                <th scope="col" style="width: 160px">Customer Location</th>
+                <th scope="col" style="width: 120px">Total Price (JOD)</th>
+                <th scope="col" style="width: 140px">Payment Method</th>
+                <th scope="col" style="width: 120px">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders; index as i">
+                <th scope="row" style="width: 40px">{{ i + 1 }}</th>
+                <td style="width: 120px">{{ order.orderId }}</td>
+                <td style="width: 160px">
+                  {{ order.orderDto.orderDate | date : "medium" }}
+                </td>
+                <td style="width: 160px">{{ order.customerName }}</td>
+                <td style="width: 200px">{{ order.customerEmail }}</td>
+                <td style="width: 140px">{{ order.customerPhone }}</td>
+                <td style="width: 160px">{{ order.customerLocation }}</td>
+                <td style="width: 120px">
+                  {{ order.price | currency : "JOD" : "symbol" }}
+                </td>
+                <td style="width: 140px">{{ order.paymentMethod }}</td>
+                <td style="width: 120px">
+                  <button
+                    class="btn btn-outline-success btn-sm w-100"
+                    type="button"
+                    (click)="DeleteOrder(order.checkoutFormId,order.orderId)"
+                  >
+                    Complete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

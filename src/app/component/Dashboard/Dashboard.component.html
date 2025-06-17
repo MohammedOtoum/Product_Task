@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <!-- Language Selector -->
+  <div class="d-flex justify-content-end mb-4">
+    <select
+      class="form-select w-auto"
+      [(ngModel)]="currentLang"
+      (change)="switchLanguage(currentLang)"
+    >
+      <option value="en">{{ "ENGLISH" | translate }}</option>
+      <option value="ar">{{ "ARABIC" | translate }}</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <!-- Orders Card -->
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">{{ "TOTAL_ORDERS" | translate }}</h5>
+          <p class="card-text display-4">{{ orderCount }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Card -->
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <h5 class="card-title">{{ "TOTAL_PRODUCTS" | translate }}</h5>
+          <p class="card-text display-4">{{ productCount }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Card -->
+  <div class="row">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card" style="height: 950px; width: 850px">
+        <div class="card-body">
+          <h5 class="card-title">{{ "SALES_CHART" | translate }}</h5>
+          <canvas id="MyChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

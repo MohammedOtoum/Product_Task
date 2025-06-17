@@ -1,0 +1,440 @@
+<!-- LANGUAGE SWITCH -->
+<div class="container py-3">
+  <div class="d-flex justify-content-end">
+    <select
+      class="form-select w-auto"
+      [(ngModel)]="currentLang"
+      (change)="switchLanguage(currentLang)"
+    >
+      <option value="en">{{ "ENGLISH" | translate }}</option>
+      <option value="ar">{{ "ARABIC" | translate }}</option>
+    </select>
+  </div>
+</div>
+
+<section class="bg-light py-5">
+  <div class="container">
+    <!-- CART SECTION -->
+    <div class="mb-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">{{ "CART_TITLE" | translate }}</h3>
+        <a
+          [routerLink]="['/userProducts']"
+          class="text-decoration-none text-primary"
+        >
+          <i class="fas fa-long-arrow-alt-left me-2"></i>
+          {{ "CONTINUE_SHOPPING" | translate }}
+        </a>
+      </div>
+
+      <div
+        *ngFor="let product of productList"
+        class="card rounded-3 mb-4 shadow-sm"
+      >
+        <div class="card-body">
+          <div class="row align-items-center g-3">
+            <div class="col-md-2 text-center">
+              <img
+                [src]="imageUrls[product.id]"
+                class="img-fluid rounded"
+                [alt]="product.name"
+              />
+            </div>
+            <div class="col-md-3">
+              <h5 class="mb-1">{{ product.name }}</h5>
+              <p class="mb-0 text-muted">
+                {{ "CATEGORY" | translate }}: {{ product.categoryName }}
+              </p>
+            </div>
+            <div class="col-md-3 d-flex align-items-center">
+              <button
+                class="btn btn-outline-secondary px-2"
+                (click)="decreaseQuantity(product)"
+              >
+                <i class="fas fa-minus">-</i>
+              </button>
+              <input
+                type="number"
+                min="1"
+                [(ngModel)]="product.quantity"
+                class="form-control mx-2"
+                style="width: 70px"
+              />
+              <button
+                class="btn btn-outline-secondary px-2"
+                (click)="increaseQuantity(product)"
+              >
+                <i class="fas fa-plus">+</i>
+              </button>
+            </div>
+            <div class="col-md-2">
+              <h5
+                class="mb-0 text-success"
+                [class.text-end]="currentLang === 'ar'"
+              >
+                {{
+                  product.price * product.quantity
+                    | currency : (currentLang === "ar" ? "JOD" : "USD")
+                }}
+              </h5>
+            </div>
+            <div class="col-md-2 text-end">
+              <button class="btn btn-danger" (click)="removeFromCart(product)">
+                {{ "DELETE" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHIPPING INFORMATION -->
+    <div class="card mb-5 shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-4">{{ "SHIPPING_INFORMATION" | translate }}</h5>
+
+        <form
+          #shippingForm="ngForm"
+          (ngSubmit)="onSubmit(shippingForm)"
+          class="row g-3"
+          novalidate
+        >
+          <!-- Full Name -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(fullName) }">
+            <label class="form-label">
+              {{ "FULL_NAME" | translate }} <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              [(ngModel)]="checkoutForm.fullName"
+              #fullName="ngModel"
+              required
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(fullName)">
+              {{ "FULL_NAME_REQUIRED" | translate }}
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(phoneNumber) }">
+            <label class="form-label">
+              {{ "PHONE_NUMBER" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              [(ngModel)]="checkoutForm.phoneNumber"
+              #phoneNumber="ngModel"
+              required
+              pattern="^\+?[0-9\-\s]{7,15}$"
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(phoneNumber)">
+              {{ "PHONE_NUMBER_REQUIRED" | translate }}
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(email) }">
+            <label class="form-label">
+              {{ "EMAIL_ADDRESS" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="checkoutForm.email"
+              #email="ngModel"
+              required
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(email)">
+              <span *ngIf="email.errors?.['required']">{{
+                "EMAIL_REQUIRED" | translate
+              }}</span>
+              <span *ngIf="email.errors?.['email']">{{
+                "EMAIL_INVALID" | translate
+              }}</span>
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(country) }">
+            <label class="form-label">
+              {{ "COUNTRY" | translate }} <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="country"
+              [(ngModel)]="checkoutForm.country"
+              #country="ngModel"
+              required
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(country)">
+              {{ "COUNTRY_REQUIRED" | translate }}
+            </div>
+          </div>
+
+          <!-- State -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(state) }">
+            <label class="form-label">
+              {{ "STATE_PROVINCE" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="state"
+              [(ngModel)]="checkoutForm.state"
+              #state="ngModel"
+              required
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(state)">
+              {{ "STATE_REQUIRED" | translate }}
+            </div>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(city) }">
+            <label class="form-label">
+              {{ "CITY" | translate }} <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="city"
+              [(ngModel)]="checkoutForm.city"
+              #city="ngModel"
+              required
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(city)">
+              {{ "CITY_REQUIRED" | translate }}
+            </div>
+          </div>
+
+          <!-- Address 1 -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(address1) }">
+            <label class="form-label">
+              {{ "STREET_ADDRESS_LINE_1" | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="address1"
+              [(ngModel)]="checkoutForm.address1"
+              #address1="ngModel"
+              required
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(address1)">
+              {{ "ADDRESS_REQUIRED" | translate }}
+            </div>
+          </div>
+
+          <!-- Address 2 -->
+          <div class="col-md-6">
+            <label class="form-label">{{ "ADDRESS_LINE_2" | translate }}</label>
+            <input
+              type="text"
+              name="address2"
+              [(ngModel)]="checkoutForm.address2"
+              class="form-control"
+            />
+          </div>
+
+          <!-- Postal Code -->
+          <div class="col-md-6" [ngClass]="{ invalid: isInvalid(postalCode) }">
+            <label class="form-label">{{ "POSTAL_CODE" | translate }}</label>
+            <input
+              type="text"
+              name="postalCode"
+              [(ngModel)]="checkoutForm.postalCode"
+              #postalCode="ngModel"
+              pattern="^[0-9A-Za-z\-\s]{3,10}$"
+              class="form-control"
+            />
+            <div class="text-danger" *ngIf="isInvalid(postalCode)">
+              {{ "POSTAL_CODE_INVALID" | translate }}
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="col-12">
+            <label class="form-label">{{
+              "ADDITIONAL_NOTES" | translate
+            }}</label>
+            <textarea
+              name="notes"
+              [(ngModel)]="checkoutForm.notes"
+              class="form-control"
+              rows="3"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- PAYMENT SECTION -->
+    <div class="card shadow-sm mb-5">
+      <div class="card-body">
+        <h5 class="text-center mb-4">{{ "PAYMENT" | translate }}</h5>
+
+        <form>
+          <div class="mb-3">
+            <label class="form-label"
+              >{{ "SELECT_PAYMENT_METHOD" | translate }}
+              <span class="text-danger">*</span></label
+            >
+            <div *ngFor="let method of paymentMethods" class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="paymentMethod"
+                [value]="method"
+                [(ngModel)]="checkoutForm.paymentMethod"
+                [id]="method"
+                required
+              />
+              <label class="form-check-label" [for]="method">
+                <img
+                  *ngIf="method === 'Card'"
+                  src="https://img.icons8.com/color/32/000000/bank-card-back-side.png"
+                  class="me-2"
+                />
+                <img
+                  *ngIf="method === 'PayPal'"
+                  src="https://img.icons8.com/color/32/000000/paypal.png"
+                  class="me-2"
+                />
+                <img
+                  *ngIf="method === 'Cash on Delivery'"
+                  src="cash-on-delivery.png"
+                  height="30px"
+                  width="30px"
+                  class="me-2"
+                />
+                <img
+                  *ngIf="method === 'Bank Transfer'"
+                  src="https://img.icons8.com/color/32/000000/bank.png"
+                  class="me-2"
+                />
+                {{ method | translate }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Card Info Section -->
+          <div *ngIf="checkoutForm.paymentMethod === 'Card'" class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"
+                >{{ "CARDHOLDER_NAME" | translate }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                [(ngModel)]="checkoutForm.cardInfo.cardHolderName"
+                name="cardHolderName"
+                class="form-control"
+                required
+                #cardHolderNameRef="ngModel"
+              />
+              <div
+                class="text-danger"
+                *ngIf="cardHolderNameRef.invalid && cardHolderNameRef.touched"
+              >
+                {{ "REQUIRED_FIELD" | translate }}
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"
+                >{{ "CARD_NUMBER" | translate }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                [ngModel]="formattedCardNumber"
+                (ngModelChange)="onCardNumberChange($event)"
+                name="cardNumber"
+                class="form-control"
+                required
+                maxlength="19"
+                #cardNumberRef="ngModel"
+                (blur)="validateCardNumber()"
+                placeholder="1234 5678 9012 3456"
+              />
+              <div
+                class="text-danger"
+                *ngIf="cardNumberRef.invalid && cardNumberRef.touched"
+              >
+                {{ "INVALID_CARD_NUMBER" | translate }}
+              </div>
+              <div class="text-danger" *ngIf="cardNumberInvalid">
+                {{ "CARD_NUMBER_FAILED_LUHN" | translate }}
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"
+                >{{ "EXPIRATION_DATE" | translate }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                [(ngModel)]="checkoutForm.cardInfo.expirationDate"
+                name="expirationDate"
+                class="form-control"
+                required
+                placeholder="MM/YYYY"
+                pattern="^(0[1-9]|1[0-2])\/\d{4}$"
+                #expirationDateRef="ngModel"
+                (blur)="validateExpirationDate()"
+              />
+              <div
+                class="text-danger"
+                *ngIf="expirationDateRef.invalid && expirationDateRef.touched"
+              >
+                {{ "INVALID_EXPIRATION_FORMAT" | translate }}
+              </div>
+              <div class="text-danger" *ngIf="expirationDateInvalid">
+                {{ "EXPIRATION_DATE_IN_PAST" | translate }}
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"
+                >{{ "CVV" | translate }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                [(ngModel)]="checkoutForm.cardInfo.cvv"
+                name="cvv"
+                class="form-control"
+                required
+                pattern="^\d{3,4}$"
+                #cvvRef="ngModel"
+              />
+              <div class="text-danger" *ngIf="cvvRef.invalid && cvvRef.touched">
+                {{ "INVALID_CVV" | translate }}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="text-end">
+      <button
+        class="btn btn-warning btn-lg"
+        [disabled]="!validateCheckoutForm()"
+        (click)="proceedToPayment()"
+      >
+        {{ "PROCEED_TO_PAY" | translate }}
+      </button>
+    </div>
+  </div>
+</section>

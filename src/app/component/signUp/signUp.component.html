@@ -1,0 +1,146 @@
+<section class="vh-100" style="background-color: #eee">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-12 col-xl-11">
+        <div class="card text-black" style="border-radius: 25px">
+          <div class="card-body p-md-5">
+            <div class="row justify-content-center">
+              <!-- Form Column -->
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                <!-- Language Selector -->
+                <div class="mb-4 d-flex justify-content-end">
+                  <select
+                    class="form-select form-select-sm"
+                    style="width: 150px"
+                    [(ngModel)]="currentLang"
+                    (change)="switchLanguage(currentLang)"
+                  >
+                    <option value="en">{{ "ENGLISH" | translate }}</option>
+                    <option value="ar">{{ "ARABIC" | translate }}</option>
+                  </select>
+                </div>
+
+                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
+                  {{ "SIGN_UP" | translate }}
+                </p>
+
+                <form class="mx-1 mx-md-4">
+                  <div class="mb-4 d-flex flex-column">
+                    <label class="form-label" for="firstName">{{
+                      "FIRST_NAME" | translate
+                    }}</label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      class="form-control"
+                      name="firstName"
+                      [(ngModel)]="userObj.firstName"
+                    />
+                  </div>
+
+                  <div class="mb-4 d-flex flex-column">
+                    <label class="form-label" for="lastName">{{
+                      "LAST_NAME" | translate
+                    }}</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      class="form-control"
+                      name="lastName"
+                      [(ngModel)]="userObj.lastName"
+                    />
+                  </div>
+
+                  <div class="mb-4 d-flex flex-column">
+                    <label class="form-label" for="email">{{
+                      "YOUR_EMAIL" | translate
+                    }}</label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-control"
+                      name="email"
+                      [(ngModel)]="userObj.email"
+                    />
+                  </div>
+
+                  <div class="mb-4 d-flex flex-column">
+                    <label class="form-label" for="gender">{{
+                      "GENDER" | translate
+                    }}</label>
+                    <select
+                      id="gender"
+                      class="form-select"
+                      name="gender"
+                      [(ngModel)]="userObj.gender"
+                    >
+                      <option value="">
+                        {{ "SELECT_GENDER" | translate }}
+                      </option>
+                      <option value="male">
+                        {{ "GENDER_MALE" | translate }}
+                      </option>
+                      <option value="female">
+                        {{ "GENDER_FEMALE" | translate }}
+                      </option>
+                      <option value="other">
+                        {{ "GENDER_OTHER" | translate }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="mb-4 d-flex flex-column">
+                    <label class="form-label" for="password">{{
+                      "PASSWORD" | translate
+                    }}</label>
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control"
+                      name="password"
+                      [(ngModel)]="userObj.password"
+                    />
+                  </div>
+
+                  <div class="mb-4 d-flex flex-column">
+                    <label class="form-label" for="repeatPassword">{{
+                      "REPEAT_PASSWORD" | translate
+                    }}</label>
+                    <input
+                      type="password"
+                      id="repeatPassword"
+                      class="form-control"
+                      name="passwordConfirm"
+                      [(ngModel)]="userObj.passwordConfirm"
+                    />
+                  </div>
+
+                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-lg"
+                      (click)="SignUp(userObj)"
+                    >
+                      {{ "REGISTER" | translate }}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Image Column -->
+              <div
+                class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2"
+              >
+                <img
+                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                  class="img-fluid"
+                  alt="Sample image"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

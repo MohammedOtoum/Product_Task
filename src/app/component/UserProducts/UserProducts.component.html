@@ -1,0 +1,162 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" [routerLink]="['/userProfile']">{{ fullName }}</a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Category Filter -->
+      <select
+        class="form-select me-2"
+        style="width: 200px"
+        [(ngModel)]="selectedCategoryId"
+        (change)="filterProducts(selectedCategoryId, searchInput.value)"
+      >
+        <option value="">{{ "SELECT_CATEGORY" | translate }}</option>
+        <option value="1">{{ "CATEGORY_1" | translate }}</option>
+        <option value="2">{{ "CATEGORY_2" | translate }}</option>
+        <option value="3">{{ "CATEGORY_3" | translate }}</option>
+        <option value="4">{{ "CATEGORY_4" | translate }}</option>
+        <option value="5">{{ "CATEGORY_5" | translate }}</option>
+      </select>
+
+      <!-- Search bar -->
+      <input
+        #searchInput
+        type="search"
+        class="form-control me-2"
+        placeholder="{{ 'SEARCH_PLACEHOLDER' | translate }}"
+        (input)="filterProducts(selectedCategoryId, searchInput.value)"
+      />
+
+      <!-- Sort Buttons -->
+      <button
+        class="btn btn-outline-secondary me-2"
+        (click)="filterProducts(selectedCategoryId, searchInput.value, 'asc')"
+      >
+        {{ "PRICE_ASC" | translate }}
+      </button>
+      <button
+        class="btn btn-outline-secondary me-2"
+        (click)="filterProducts(selectedCategoryId, searchInput.value, 'desc')"
+      >
+        {{ "PRICE_DESC" | translate }}
+      </button>
+
+      <!-- Cart Button -->
+      <button
+        class="btn btn-outline-dark me-2"
+        type="button"
+        [routerLink]="['/cart', SelectedProductList.join(',')]"
+      >
+        <i class="bi-cart-fill me-1 ms-1"></i>
+        {{ "CART" | translate }}
+        <span class="badge bg-dark text-white ms-1 rounded-pill">
+          {{ SelectedProductList.length }}
+        </span>
+      </button>
+
+      <!-- Language Selector -->
+      <select
+        class="form-select me-2"
+        style="width: 200px"
+        [(ngModel)]="currentLang"
+        (change)="switchLanguage(currentLang)"
+      >
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+
+      <!-- Logout -->
+      <button class="btn btn-danger mx-3" type="button" (click)="logout()">
+        {{ "LOGOUT" | translate }}
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Header -->
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">{{ "TITLE" | translate }}</h1>
+    </div>
+  </div>
+</header>
+
+<!-- Products Grid -->
+<section class="py-5">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div
+        class="col mb-5"
+        *ngFor="let product of pagedProducts; let i = index"
+      >
+        <div class="card h-100">
+          <!-- Image -->
+          <img
+            *ngIf="imageUrls[product.id]; else loadingImage"
+            class="card-img-top"
+            [src]="imageUrls[product.id]"
+            [alt]="product.name"
+            style="object-fit: contain; height: 200px"
+          />
+          <ng-template #loadingImage>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style="height: 200px; background-color: #f8f9fa"
+            >
+              <span>{{ "LOADING_IMAGE" | translate }}</span>
+            </div>
+          </ng-template>
+
+          <!-- Body -->
+          <div class="card-body text-center">
+            <h5 class="fw-bold">{{ product.name }}</h5>
+            <p class="mb-1 text-muted">{{ product.categoryName }}</p>
+            <p class="text-truncate">{{ product.description }}</p>
+            <span class="fw-bold">{{ product.price | currency }}</span>
+            <br />
+            <button class="btn btn-primary" (click)="addCart(product.id)">
+              {{ "ADD_TO_CART" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+      <button
+        *ngFor="
+          let page of [].constructor(
+            Math.ceil(productList.length / itemsPerPage)
+          );
+          let i = index
+        "
+        class="btn btn-outline-primary mx-1"
+        (click)="changePage(i + 1)"
+      >
+        {{ i + 1 }}
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+  <div class="container">
+    <p class="m-0 text-center text-white">{{ "YOUR_WEBSITE" | translate }}</p>
+  </div>
+</footer>

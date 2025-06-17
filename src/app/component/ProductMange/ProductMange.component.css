@@ -1,0 +1,12 @@
+.custom-pagination {
+  margin-bottom: 30px; /* adjust as needed */
+}
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}

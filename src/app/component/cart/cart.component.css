@@ -1,0 +1,13 @@
+@media (min-width: 1025px) {
+  .h-custom {
+    height: 100vh !important;
+  }
+}
+.invalid input,
+.invalid textarea {
+  border: 1px solid red;
+}
+
+.text-danger {
+  font-size: 0.875rem;
+}

@@ -1,0 +1,3 @@
+interface AddProductResponse {
+  message: string;
+}

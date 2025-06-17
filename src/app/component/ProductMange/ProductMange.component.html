@@ -1,0 +1,224 @@
+<nav class="navbar bg-light navbar-light navbar-expand-sm">
+  <div class="container-fluid">
+    <ul class="navbar-nav w-100 d-flex align-items-center gx-3">
+      <!-- Search -->
+      <li class="nav-item flex-grow-1">
+        <div class="input-group">
+          <input
+            type="search"
+            class="form-control rounded"
+            [placeholder]="'SEARCH_PLACEHOLDER' | translate"
+            aria-label="Search"
+            aria-describedby="search-addon"
+            #searchInput
+            (input)="filterProducts(selectedCategoryId, searchInput.value)"
+          />
+          <button
+            class="btn btn-secondary"
+            type="button"
+            (click)="filterProducts(selectedCategoryId, searchInput.value)"
+          >
+            {{ "SEARCH" | translate }}
+          </button>
+        </div>
+      </li>
+
+      <!-- Price sort -->
+      <li class="nav-item d-flex align-items-center ms-3">
+        <button
+          class="btn btn-outline-secondary btn-sm me-2"
+          (click)="filterProducts(selectedCategoryId, searchInput.value, 'asc')"
+          type="button"
+        >
+          {{ "PRICE_ASC" | translate }}
+        </button>
+
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="
+            filterProducts(selectedCategoryId, searchInput.value, 'desc')
+          "
+          type="button"
+        >
+          {{ "PRICE_DESC" | translate }}
+        </button>
+      </li>
+
+      <!-- Category Filter -->
+      <li class="nav-item ms-4 d-flex flex-column">
+        <label for="categoryName" class="form-label mb-1 fw-semibold">
+          {{ "SELECT_CATEGORY" | translate }}
+        </label>
+        <select
+          class="form-select form-select-sm"
+          id="categoryName"
+          name="categoryName"
+          [(ngModel)]="selectedCategoryId"
+          (change)="filterProducts(selectedCategoryId, searchInput.value)"
+        >
+          <option value="">{{ "SELECT_CATEGORY" | translate }}</option>
+          <option value="1">{{ "CATEGORY_1" | translate }}</option>
+          <option value="2">{{ "CATEGORY_2" | translate }}</option>
+          <option value="3">{{ "CATEGORY_3" | translate }}</option>
+          <option value="4">{{ "CATEGORY_4" | translate }}</option>
+          <option value="5">{{ "CATEGORY_5" | translate }}</option>
+        </select>
+      </li>
+
+      <!-- Export & Navigation Buttons -->
+      <li class="nav-item ms-3 d-flex gap-2">
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="exportExcel()"
+          type="button"
+        >
+          {{ "EXPORT_EXCEL" | translate }}
+        </button>
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="exportPdf()"
+          type="button"
+        >
+          {{ "EXPORT_PDF" | translate }}
+        </button>
+        <button
+          class="btn btn-outline-secondary btn-sm me-2"
+          [routerLink]="['/dashboard']"
+          type="button"
+        >
+          {{ "GO_TO_DASHBOARD" | translate }}
+        </button>
+        <button
+          class="btn btn-outline-secondary btn-sm me-2"
+          [routerLink]="['/viewOrder']"
+          type="button"
+        >
+          {{ "View_Orders" | translate }}
+        </button>
+      </li>
+
+      <!-- Add Product -->
+      <li class="nav-item ms-auto">
+        <button
+          class="btn btn-success btn-sm"
+          (click)="openDialog()"
+          type="button"
+        >
+          {{ "ADD_PRODUCT" | translate }}
+        </button>
+      </li>
+
+      <!-- Logout -->
+      <li class="nav-item ms-3 me-2">
+        <button class="btn btn-danger btn-sm" (click)="Logout()" type="button">
+          {{ "LOGOUT" | translate }}
+        </button>
+      </li>
+
+      <!-- Language Selector -->
+      <li class="nav-item ms-3">
+        <select
+          class="form-select form-select-sm"
+          style="width: 150px"
+          [(ngModel)]="currentLang"
+          (change)="switchLanguage(currentLang)"
+        >
+          <option value="en">{{ "ENGLISH" | translate }}</option>
+          <option value="ar">{{ "ARABIC" | translate }}</option>
+        </select>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="row mx-4 bg-light py-3">
+  <div class="col-10"></div>
+  <div class="col-2"></div>
+</div>
+
+<!-- Product Table -->
+<table class="table table-striped" id="data-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>{{ "CATEGORY" | translate }}</th>
+      <th>{{ "NAME" | translate }}</th>
+      <th>{{ "PRICE" | translate }}</th>
+      <th>{{ "DESCRIPTION" | translate }}</th>
+      <th>{{ "IMAGE" | translate }}</th>
+      <th>{{ "EDIT" | translate }}</th>
+      <th>{{ "DELETE" | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of pagedProducts; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ product.categoryName }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.price }}</td>
+      <td style="max-width: 200px">{{ product.description }}</td>
+      <td>
+        <img
+          *ngIf="imageUrls[product.id]"
+          [src]="imageUrls[product.id]"
+          alt="Product Image"
+          width="100"
+          height="100"
+        />
+        <span *ngIf="!imageUrls[product.id]">{{
+          "LOADING_IMAGE" | translate
+        }}</span>
+      </td>
+      <td>
+        <button
+          class="btn btn-primary btn-sm"
+          (click)="openUpdateDialog(product.id)"
+        >
+          {{ "EDIT" | translate }}
+        </button>
+      </td>
+      <td>
+        <button class="btn btn-danger btn-sm" (click)="OnDelete(product.id)">
+          {{ "DELETE" | translate }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation" class="custom-pagination">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <button class="page-link" (click)="changePage(currentPage - 1)">
+        {{ "PREVIOUS" | translate }}
+      </button>
+    </li>
+
+    <li
+      class="page-item"
+      *ngFor="
+        let page of [].constructor(
+          Math.ceil(productList.length / itemsPerPage)
+        );
+        let i = index
+      "
+      [class.active]="currentPage === i + 1"
+    >
+      <button class="page-link" (click)="changePage(i + 1)">
+        {{ i + 1 }}
+      </button>
+    </li>
+
+    <li
+      class="page-item"
+      [class.disabled]="
+        currentPage === Math.ceil(productList.length / itemsPerPage)
+      "
+    >
+      <button class="page-link" (click)="changePage(currentPage + 1)">
+        {{ "NEXT" | translate }}
+      </button>
+    </li>
+  </ul>
+</nav>
