@@ -104,5 +104,7 @@
   "SELECT_PAYMENT_METHOD": "Select Payment Method",
   "CARDHOLDER_NAME": "Cardholder Name",
   "EXPIRATION_DATE": "Expiration Date",
-  "View_Orders": "View Orders"
+  "View_Orders": "View Orders",
+  "View_Users": "ViewUsers",
+  "ACTIONS": "ACTIONS"
 }

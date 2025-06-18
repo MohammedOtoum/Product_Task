@@ -25,4 +25,7 @@ export class OrderService {
     const url = `https://localhost:7217/api/Orders/${orderId}`;
     return this.http.delete<void>(url);
   }
+  getOrdersByCustomerId(userId: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${userId}`);
+  }
 }

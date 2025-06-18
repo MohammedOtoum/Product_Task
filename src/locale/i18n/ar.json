@@ -101,5 +101,7 @@
   "SELECT_PAYMENT_METHOD": "اختر طريقة الدفع",
   "CARDHOLDER_NAME": "اسم صاحب البطاقة",
   "EXPIRATION_DATE": "تاريخ الانتهاء",
-  "View_Orders": "تابع الطلبات"
+  "View_Orders": "تابع الطلبات",
+  "View_Users": "تابع المستخدمين",
+  "ACTIONS": "الإجراءات"
 }

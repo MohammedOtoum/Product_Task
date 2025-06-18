@@ -1,0 +1,69 @@
+<section class="intro" style="min-height: 100vh; background-color: #f8f9fa">
+  <div class="container-fluid h-100 d-flex flex-column p-3">
+    <div class="card shadow-sm h-100 d-flex flex-column">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">User Management</h5>
+      </div>
+      <div class="card-body p-0 flex-grow-1 d-flex flex-column">
+        <div class="table-responsive" style="flex: 1 1 auto">
+          <table
+            class="table table-striped table-hover align-middle mb-0"
+            style="table-layout: fixed; width: 100%"
+          >
+            <thead class="table-dark">
+              <tr class="text-uppercase text-success">
+                <th scope="col" style="width: 40px">#</th>
+                <th scope="col" style="width: 180px">First Name</th>
+                <th scope="col" style="width: 180px">Last Name</th>
+                <th scope="col" style="width: 250px">Email</th>
+                <th scope="col" style="width: 140px">Gender</th>
+                <th scope="col" style="width: 140px">Current Role</th>
+                <th scope="col" style="width: 180px" *ngIf="roleId == 1">
+                  Role
+                </th>
+                <th scope="col" style="width: 140px" *ngIf="roleId == 1">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users; index as i">
+                <td>{{ i + 1 }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.gender }}</td>
+
+                <!-- الدور الحالي -->
+                <td>{{ currentRoleNames[user.userId] || "Unknown" }}</td>
+
+                <!-- القائمة لتحديد الدور الجديد -->
+                <td *ngIf="roleId == 1">
+                  <select
+                    class="form-select form-select-sm"
+                    [(ngModel)]="selectedRoles[user.userId]"
+                  >
+                    <option *ngFor="let role of roles" [value]="role.roleId">
+                      {{ role.roleName }}
+                    </option>
+                  </select>
+                </td>
+
+                <!-- زر الحفظ -->
+                <td *ngIf="roleId == 1">
+                  <button
+                    class="btn btn-outline-primary btn-sm w-100"
+                    type="button"
+                    (click)="updateUserRole(user)"
+                  >
+                    Save
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

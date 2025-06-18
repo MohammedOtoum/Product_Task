@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { User } from '../model/class/Users';
@@ -7,6 +7,7 @@ import { UserLogin } from '../model/class/userLogin';
 import { LoginResponse } from '../model/interface/LoginResponse';
 import { UserRefreshResponse } from '../model/interface/UserRefreshResponse';
 import { SignupResponse } from '../model/interface/signupResponse';
+import { Roles } from '../model/interface/Roles';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,8 @@ import { SignupResponse } from '../model/interface/signupResponse';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getAllUsers(): Observable<GetUser> {
-    return this.http.get<GetUser>('https://localhost:7217/api/Users');
+  getAllUsers(): Observable<GetUser[]> {
+    return this.http.get<GetUser[]>('https://localhost:7217/api/Users');
   }
   getUserbyId(Id: number): Observable<GetUser> {
     return this.http.get<GetUser>('https://localhost:7217/api/Users/' + Id);
@@ -32,18 +33,7 @@ export class UserService {
       user
     );
   }
-  // refreshToken(): Observable<UserRefreshResponse> {
-  //   const token = localStorage.getItem('token');
 
-  //
-
-  //   return this.http.get<UserRefreshResponse>(
-  //     'https://localhost:7217/api/Auth/RefreshToken',
-  //     {
-  //       headers,
-  //     }
-  //   );
-  // }
   refreshToken(): Observable<UserRefreshResponse> {
     const tokenString = localStorage.getItem('token');
     if (!tokenString) {
@@ -68,6 +58,35 @@ export class UserService {
       {
         headers,
       }
+    );
+  }
+
+  updateUserRole(userId: number, roleId: number): Observable<any> {
+    const body = {
+      userId: userId,
+      roleId: roleId,
+    };
+
+    return this.http.put(
+      'https://localhost:7217/api/Users/UpdateUserRole',
+      body,
+      { responseType: 'text' as 'json' } // ✅ لحل مشكلة parsing
+    );
+  }
+
+  getRolebyUserId(id: number): Observable<number> {
+    return this.http.get<number>(
+      'https://localhost:7217/api/Users/GetUserRole/' + id
+    );
+  }
+  getAllRoles(): Observable<Roles[]> {
+    return this.http.get<Roles[]>(
+      `https://localhost:7217/api/Users/GetAllRoles`
+    );
+  }
+  getRolNamebyRoleId(id: number): Observable<string> {
+    return this.http.get<string>(
+      'https://localhost:7217/api/Users/GetRoleName/' + id
     );
   }
 }

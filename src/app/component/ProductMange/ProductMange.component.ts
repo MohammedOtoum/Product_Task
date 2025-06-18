@@ -13,6 +13,8 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { UserService } from '../../service/userService.service';
+import { UserRefreshResponse } from '../../model/interface/UserRefreshResponse';
 @Component({
   standalone: true,
   selector: 'app-ProductMange',
@@ -39,16 +41,22 @@ export class ProductMangeComponent implements OnInit {
   Math = Math;
   selectedCategoryId?: number;
   currentLang = 'en';
+  roleId: number = 0;
 
-  constructor(private translate: TranslateService) {}
+  constructor(
+    private translate: TranslateService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     const token = this.getToken();
     if (!token) {
       this.router.navigate(['/login']);
       return;
+    } else {
+      this.getRoleId();
+      this.getAllProducts();
     }
-    this.getAllProducts();
   }
   getToken(): string | null {
     const itemStr = localStorage.getItem('token');
@@ -306,11 +314,28 @@ export class ProductMangeComponent implements OnInit {
   Logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+    localStorage.removeItem('roleId');
   }
 
   switchLanguage(lang: string) {
     this.translate.use(lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }
+  getRoleId() {
+    this.userService.refreshToken().subscribe((data: UserRefreshResponse) => {
+      this.userService
+        .getRolebyUserId(Number(data.userId))
+        .subscribe((Id: number) => {
+          localStorage.setItem('roleId', Id.toString());
+          if (Id == 1) {
+            this.roleId = Id;
+          } else if (Id == 2) {
+            this.roleId = Id;
+          } else {
+            this.roleId = Id;
+          }
+        });
+    });
   }
 }

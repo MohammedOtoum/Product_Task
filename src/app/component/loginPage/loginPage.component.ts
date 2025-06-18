@@ -6,6 +6,7 @@ import { UserLogin } from '../../model/class/userLogin';
 import { UserService } from '../../service/userService.service';
 import { LoginResponse } from '../../model/interface/LoginResponse';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { UserRefreshResponse } from '../../model/interface/UserRefreshResponse';
 
 @Component({
   selector: 'app-loginPage',
@@ -37,11 +38,18 @@ export class LoginPageComponent implements OnInit {
         expiry: now.getTime() + expireTime * 60 * 1000,
       };
       localStorage.setItem('token', JSON.stringify(item));
-      if (this.userLogin.email == 'admin@gmail.com') {
-        this.router.navigate(['/product']);
-      } else {
-        this.router.navigate(['/userProducts']);
-      }
+
+      this.userService.refreshToken().subscribe((data: UserRefreshResponse) => {
+        this.userService
+          .getRolebyUserId(Number(data.userId))
+          .subscribe((roleId: number) => {
+            if (roleId == 1 || roleId == 2) {
+              this.router.navigate(['/product']);
+            } else {
+              this.router.navigate(['/userProducts']);
+            }
+          });
+      });
     });
   }
   switchLanguage(lang: string) {

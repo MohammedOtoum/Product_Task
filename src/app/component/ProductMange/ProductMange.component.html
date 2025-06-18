@@ -9,7 +9,6 @@
             class="form-control rounded"
             [placeholder]="'SEARCH_PLACEHOLDER' | translate"
             aria-label="Search"
-            aria-describedby="search-addon"
             #searchInput
             (input)="filterProducts(selectedCategoryId, searchInput.value)"
           />
@@ -28,7 +27,6 @@
         <button
           class="btn btn-outline-secondary btn-sm me-2"
           (click)="filterProducts(selectedCategoryId, searchInput.value, 'asc')"
-          type="button"
         >
           {{ "PRICE_ASC" | translate }}
         </button>
@@ -38,7 +36,6 @@
           (click)="
             filterProducts(selectedCategoryId, searchInput.value, 'desc')
           "
-          type="button"
         >
           {{ "PRICE_DESC" | translate }}
         </button>
@@ -52,7 +49,6 @@
         <select
           class="form-select form-select-sm"
           id="categoryName"
-          name="categoryName"
           [(ngModel)]="selectedCategoryId"
           (change)="filterProducts(selectedCategoryId, searchInput.value)"
         >
@@ -65,40 +61,50 @@
         </select>
       </li>
 
-      <!-- Export & Navigation Buttons -->
-      <li class="nav-item ms-3 d-flex gap-2">
+      <!-- Admin/Manager Actions -->
+      <li
+        class="nav-item dropdown ms-3 me-2"
+        *ngIf="roleId == 1 || roleId == 2"
+      >
         <button
-          class="btn btn-outline-secondary btn-sm"
-          (click)="exportExcel()"
+          class="btn btn-outline-secondary btn-sm dropdown-toggle"
           type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
         >
-          {{ "EXPORT_EXCEL" | translate }}
+          {{ "ACTIONS" | translate }}
         </button>
-        <button
-          class="btn btn-outline-secondary btn-sm"
-          (click)="exportPdf()"
-          type="button"
-        >
-          {{ "EXPORT_PDF" | translate }}
-        </button>
-        <button
-          class="btn btn-outline-secondary btn-sm me-2"
-          [routerLink]="['/dashboard']"
-          type="button"
-        >
-          {{ "GO_TO_DASHBOARD" | translate }}
-        </button>
-        <button
-          class="btn btn-outline-secondary btn-sm me-2"
-          [routerLink]="['/viewOrder']"
-          type="button"
-        >
-          {{ "View_Orders" | translate }}
-        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <button class="dropdown-item" (click)="exportExcel()">
+              {{ "EXPORT_EXCEL" | translate }}
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" (click)="exportPdf()">
+              {{ "EXPORT_PDF" | translate }}
+            </button>
+          </li>
+          <li>
+            <a class="dropdown-item" [routerLink]="['/dashboard']">{{
+              "GO_TO_DASHBOARD" | translate
+            }}</a>
+          </li>
+          <li>
+            <a class="dropdown-item" [routerLink]="['/viewOrder']">{{
+              "View_Orders" | translate
+            }}</a>
+          </li>
+          <li>
+            <a class="dropdown-item" [routerLink]="['/manageUser']">{{
+              "View_Users" | translate
+            }}</a>
+          </li>
+        </ul>
       </li>
 
       <!-- Add Product -->
-      <li class="nav-item ms-auto">
+      <li class="nav-item ms-auto" *ngIf="roleId === 1">
         <button
           class="btn btn-success btn-sm"
           (click)="openDialog()"
@@ -131,11 +137,6 @@
   </div>
 </nav>
 
-<div class="row mx-4 bg-light py-3">
-  <div class="col-10"></div>
-  <div class="col-2"></div>
-</div>
-
 <!-- Product Table -->
 <table class="table table-striped" id="data-table">
   <thead>
@@ -146,8 +147,8 @@
       <th>{{ "PRICE" | translate }}</th>
       <th>{{ "DESCRIPTION" | translate }}</th>
       <th>{{ "IMAGE" | translate }}</th>
-      <th>{{ "EDIT" | translate }}</th>
-      <th>{{ "DELETE" | translate }}</th>
+      <th *ngIf="roleId === 1">{{ "EDIT" | translate }}</th>
+      <th *ngIf="roleId === 1">{{ "DELETE" | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -169,7 +170,7 @@
           "LOADING_IMAGE" | translate
         }}</span>
       </td>
-      <td>
+      <td *ngIf="roleId === 1">
         <button
           class="btn btn-primary btn-sm"
           (click)="openUpdateDialog(product.id)"
@@ -177,7 +178,7 @@
           {{ "EDIT" | translate }}
         </button>
       </td>
-      <td>
+      <td *ngIf="roleId === 1">
         <button class="btn btn-danger btn-sm" (click)="OnDelete(product.id)">
           {{ "DELETE" | translate }}
         </button>
@@ -194,7 +195,6 @@
         {{ "PREVIOUS" | translate }}
       </button>
     </li>
-
     <li
       class="page-item"
       *ngFor="
@@ -209,7 +209,6 @@
         {{ i + 1 }}
       </button>
     </li>
-
     <li
       class="page-item"
       [class.disabled]="

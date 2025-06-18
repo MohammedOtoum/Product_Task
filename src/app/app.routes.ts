@@ -6,7 +6,8 @@ import { UserProductsComponent } from './component/UserProducts/UserProducts.com
 import { CartComponent } from './component/cart/cart.component';
 import { DashboardComponent } from './component/Dashboard/Dashboard.component';
 import { ViewOrdersComponent } from './component/ViewOrders/ViewOrders.component';
-import { UserProfileComponent } from './component/UserProfile/UserProfile.component';
+import { ManageUsersComponent } from './component/ManageUsers/ManageUsers.component';
+// import { UserProfileComponent } from './component/UserProfile/UserProfile.component';
 
 export const routes: Routes = [
   {
@@ -43,7 +44,11 @@ export const routes: Routes = [
     component: ViewOrdersComponent,
   },
   {
-    path: 'userProfile',
-    component: UserProfileComponent,
+    path: 'manageUser',
+    component: ManageUsersComponent,
   },
+  // {
+  //   path: 'userProfile',
+  //   component: UserProfileComponent,
+  // },
 ];
